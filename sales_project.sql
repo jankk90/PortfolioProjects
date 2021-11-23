@@ -33,3 +33,14 @@ LEFT JOIN Portfolio..Returns ret
 
 GROUP BY YEAR(ord.ORDER_DATE)
 ORDER BY 2
+
+--Total number of orders and sales by a customer, Distinguish New customer vs Exisitng Customer
+SELECT [Customer_Name], [SALES], count(Customer_Name) OVER (PARTITION BY Customer_Name) as 'NO.ORDERS PER PERSON',
+SUM([SALES]) OVER (PARTITION BY Customer_Name) as 'TOTAL SALES PER PERSON', 'ORDER_TYPE' =
+ CASE 
+    WHEN count(Customer_Name) OVER (PARTITION BY Customer_Name) = 1 THEN 'NEW CUSTOMER'
+	ELSE 'EXISTING CUSTOMER'
+ END
+  FROM  [Portfolio].[dbo].[Orders]
+ORDER BY 3 
+
